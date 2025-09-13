@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ukiyo-e Style CSS/SVG Girl (single file)</title>
+<style>
+  :root{
+    /* palette (tweak freely) */
+    --ink:#111218;
+    --paper:#faf7ef;
+    --sun:#f26a3d;
+    --kimono1:#e9554e;
+    --kimono2:#1a2d2a;
+    --obi:#1f2640;
+    --obiTrim:#9ec6ff;
+    --hair:#13151e;
+    --hair-hi:#1e2130;
+    --skin:#fff7ee;
+    --cheek:#e16a58;
+    --lip:#b11e3a;
+    --leaf:#2c7a53;
+    --petal:#fff7f2;
+    --line:#0c0e14;
+  }
+  html,body{height:100%;margin:0;background:radial-gradient(1600px 900px at 70% 10%, #1a1d28, #0b0d12)}
+  .wrap{height:100%;display:grid;place-items:center}
+  svg{width:min(90vmin,900px);height:auto;display:block;filter:drop-shadow(0 40px 60px rgba(0,0,0,.35))}
+  /* ink-like strokes */
+  .stroke{stroke:var(--line);stroke-linecap:round;stroke-linejoin:round}
+  /* subtle paper texture vignette */
+  .paper{fill:var(--paper)}
+  .sun{fill:var(--sun)}
+  .hair{fill:url(#hairGrad)}
+  .skin{fill:var(--skin)}
+  .kimono1{fill:var(--kimono1)}
+  .kimono2{fill:var(--kimono2)}
+  .obi{fill:var(--obi)}
+  .obiTrim{fill:var(--obiTrim)}
+  .leaf{fill:var(--leaf)}
+  .petal{fill:var(--petal)}
+  .cheek{fill:var(--cheek);opacity:.9}
+  .lip{fill:var(--lip)}
+  .shine{fill:#fff;opacity:.35}
+
+  /* Eyes (blink by scaling lids) */
+  .lid { transform-origin: 0 0; animation: blink 6s infinite ease-in-out; }
+  .lid.r { transform-origin: 0 0; animation-delay: .15s }
+  @keyframes blink{
+    0%,92%,100%{ transform: scaleY(0) }
+    95%{ transform: scaleY(1) }
+  }
+
+  /* gentle float */
+  .float{animation: bob 7s ease-in-out infinite}
+  @keyframes bob{
+    0%{ transform: translateY(0) }
+    50%{ transform: translateY(-6px) }
+    100%{ transform: translateY(0) }
+  }
+
+  /* falling petals */
+  .petal-fall{animation: fall 14s linear infinite}
+  .petal-fall:nth-child(odd){animation-duration:18s}
+  @keyframes fall{
+    0%{ transform: translate(0,-20px) rotate(0deg); opacity:0 }
+    7%{ opacity:.9 }
+    100%{ transform: translate(-220px,420px) rotate(380deg); opacity:0 }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Everything is inline SVG so it remains a single file -->
+  <svg viewBox="0 0 900 700" role="img" aria-label="Ukiyo-e style woman in kimono">
+    <defs>
+      <radialGradient id="paperGrad" cx="50%" cy="40%" r="70%">
+        <stop offset="0%" stop-color="var(--paper)"/>
+        <stop offset="100%" stop-color="#efe9dc"/>
+      </radialGradient>
+      <linearGradient id="hairGrad" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0" stop-color="var(--hair-hi)"/>
+        <stop offset="1" stop-color="var(--hair)"/>
+      </linearGradient>
+      <!-- soft vignette -->
+      <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="2"/>
+      </filter>
+    </defs>
+
+    <!-- background paper & sun disk -->
+    <g class="float">
+      <circle class="paper" cx="450" cy="350" r="330" fill="url(#paperGrad)"/>
+      <circle class="sun"   cx="610" cy="265" r="140"/>
+    </g>
+
+    <!-- stylized branch & blossoms (simple shapes for framing) -->
+    <g transform="translate(120,120) rotate(-12)">
+      <path d="M0,120 C90,60 160,60 240,20" fill="none" class="stroke" stroke-width="6" opacity=".35"/>
+      <g transform="translate(230,30)">
+        <circle class="petal" cx="0" cy="0" r="22" />
+        <circle class="petal" cx="-24" cy="12" r="12" />
+        <circle class="petal" cx="22" cy="16" r="10" />
+        <circle class="leaf"  cx="40" cy="-6" r="10" />
+      </g>
+    </g>
+
+    <!-- Person group -->
+    <g transform="translate(210,140)" class="float">
+      <!-- hair bun/back -->
+      <ellipse class="hair" cx="280" cy="140" rx="158" ry="130"/>
+      <ellipse class="hair" cx="360" cy="88"  rx="80"  ry="60"/>
+      <!-- nape -->
+      <path class="skin" d="M262,226 q48,10 92,0 v44 q-48,20-92,0z"/>
+
+      <!-- face (3/4) -->
+      <path class="skin stroke" stroke-width="2"
+            d="M245,115
+               q-6,32 0,72
+               q8,58 62,73
+               q42,10 82-12
+               q38-22 46-78
+               q8-58-16-92
+               q-26-36-76-38
+               q-58-2-84,40
+               z"/>
+
+      <!-- frontal bangs + hairline -->
+      <path class="hair" d="M240,122 q36-58 120-62 q62-2 98,30 q-40,0-80,22 q-26,14-40,32 q-38-14-98-22z"/>
+      <!-- inner hair shadow -->
+      <path fill="rgba(0,0,0,.24)" d="M260,132 q66-24 126-4 q-34,8-58,30 q-42-16-68-26z" filter="url(#soft)"/>
+
+      <!-- eye + brow (almond, feminine) -->
+      <!-- left (near viewer) -->
+      <g transform="translate(330,185)">
+        <path class="stroke" stroke-width="5" d="M-48,-16 q26,-14 54,0" />
+        <path d="M-35,-10 q14,-8 30,0 q-4,12-15,12 q-10,0-15-12z" fill="#20222b"/>
+        <!-- eyelid -->
+        <rect class="hair lid" x="-38" y="-16" width="36" height="18" fill="var(--hair)"/>
+      </g>
+      <!-- far eye -->
+      <g transform="translate(402,178) scale(.92)">
+        <path class="stroke" stroke-width="4" d="M-38,-14 q22,-12 44,0" />
+        <path d="M-26,-9 q12,-7 24,0 q-3,10-12,10 q-8,0-12-10z" fill="#20222b"/>
+        <rect class="hair lid r" x="-30" y="-14" width="28" height="16" fill="var(--hair)"/>
+      </g>
+
+      <!-- nose line & philtrum -->
+      <path class="stroke" stroke-width="2" d="M384,182 q-8,18 -18,24" opacity=".55"/>
+      <path class="stroke" stroke-width="1.5" d="M360,214 q-4,8 -6,12" opacity=".5"/>
+
+      <!-- cheek & lips -->
+      <circle class="cheek" cx="356" cy="206" r="18"/>
+      <path class="lip stroke" stroke-width="1"
+            d="M338,226 q14,12 36,0 q-18,12-36,0z"/>
+
+      <!-- kimono layers -->
+      <path class="kimono2 stroke" stroke-width="2"
+            d="M168,298 q90,-70 212,-70 q120,0 210,70 v150 q-220,50-432,0z"/>
+      <!-- collar white -->
+      <path fill="#f7f8ff"
+            d="M260,246 q34,18 68,18 q38,0 70,-18 q-20,34-70,34 q-50,0-68,-34z"/>
+      <!-- main kimono -->
+      <path class="kimono1"
+            d="M172,314 q86,-58 206,-58 q120,0 206,58 v110 q-208,42-412,0z"/>
+      <!-- obi -->
+      <rect class="obi" x="212" y="344" width="360" height="44" rx="8"/>
+      <rect class="obiTrim" x="252" y="352" width="280" height="12" rx="6"/>
+
+      <!-- simple floral pattern on kimono -->
+      <g opacity=".9">
+        <g transform="translate(230,332) scale(.9)">
+          <circle class="leaf" r="7" cx="12" cy="28"/>
+          <circle class="leaf" r="6" cx="28" cy="18"/>
+          <circle class="petal" r="6" cx="18" cy="8"/>
+        </g>
+        <g transform="translate(540,334) scale(.9)">
+          <circle class="leaf" r="7" cx="-12" cy="26"/>
+          <circle class="leaf" r="6" cx="-28" cy="16"/>
+          <circle class="petal" r="6" cx="-18" cy="6"/>
+        </g>
+      </g>
+
+      <!-- hair front silhouette framing the face -->
+      <path class="hair"
+            d="M232,164 q30,-34 56,-30 q-8,16-8,40 q0,34 16,54 q-36,-10-64,-64z"/>
+      <path class="hair"
+            d="M472,160 q-28,-34 -56,-30 q10,18 10,40 q0,34 -14,54 q30,-6 60,-64z"/>
+
+      <!-- subtle face shine -->
+      <path class="shine" d="M314,152 q42,-18 90,-8 q-32,4-50,20 q-22,-6-40,-12z"/>
+    </g>
+
+    <!-- drifting petals (JS will randomize positions a bit) -->
+    <g id="petals">
+      <g class="petal-fall" style="transform:translate(760,60px)">
+        <path class="petal" d="M0,0 c14,-6 26,8 16,18 c-8,8-28,0-16,-18z"/>
+      </g>
+      <g class="petal-fall" style="transform:translate(820,40px)">
+        <path class="petal" d="M0,0 c10,-8 26,4 18,16 c-6,10-26,4-18,-16z"/>
+      </g>
+      <g class="petal-fall" style="transform:translate(700,20px)">
+        <path class="petal" d="M0,0 c12,-6 22,10 12,18 c-8,6-22,-4-12,-18z"/>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<script>
+  // Light randomization for petals so each load feels fresh (still single-file)
+  const petals = document.querySelector('#petals');
+  for(let i=0;i<10;i++){
+    const g = petals.firstElementChild.cloneNode(true);
+    const x = 700 + Math.random()*180;
+    const y = Math.random()*80 + (i*8);
+    g.style.transform = `translate(${x}px, ${y}px)`;
+    g.style.animationDelay = `${Math.random()*8}s`;
+    petals.appendChild(g);
+  }
+</script>
+</body>
+</html>
